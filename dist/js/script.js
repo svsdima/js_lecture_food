@@ -222,7 +222,46 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  setClock('.timer', deadline);
+  setClock('.timer', deadline); // -------------------------------------------------------------------------------------------------------------
+
+  /* Создаём модальное окно */
+
+  const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = document.querySelector('[data-close]');
+  modalTrigger.forEach(btn => {
+    /* Открываем модальное окно */
+    btn.addEventListener('click', () => {
+      modal.classList.add('show');
+      modal.classList.remove('hide');
+      document.body.style.overflow = "hidden";
+    });
+  });
+  /* Создаём функцию закрытия модального окна */
+
+  function closeModal() {
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+    document.body.style.overflow = "";
+  }
+  /* Закрываем модальное окно */
+
+
+  modalCloseBtn.addEventListener('click', closeModal);
+  /* Делаем подложку (кликаем на тёмный фон и модальное окно закрывается) */
+
+  modal.addEventListener('click', e => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+  /* Закрываем модальное окно при помощи клавиши ESC */
+
+  document.addEventListener('keydown', e => {
+    if (e.code === "Escape" && modal.classList.contains('show')) {
+      closeModal();
+    }
+  });
 });
 
 /***/ })
