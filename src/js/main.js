@@ -291,10 +291,6 @@ window.addEventListener('DOMContentLoaded', () => {
         // form.append(statusMessage);
         form.insertAdjacentElement('afterend', statusMessage);
 
-        const request = new XMLHttpRequest();
-        request.open('POST', 'server.php');
-
-        request.setRequestHeader('Content-type', 'application/json');
         const formData = new FormData(form);
 
         const object = {};
@@ -302,20 +298,33 @@ window.addEventListener('DOMContentLoaded', () => {
             object[key] = value;
         });
 
-        const json = JSON.stringify(object);
 
-        request.send(json);
-
-        request.addEventListener('load', () => {
-            if (request.status === 200) {
-                console.log(request.response);
-                showThanksModal(message.succes);
-                form.reset();
-                statusMessage.remove();
-            } else {
-                showThanksModal(message.failure);
-            }
+        fetch('server.php', {
+            method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(object)
+        }).then(data => data.text())
+        .then(data => {
+            console.log(data);
+            showThanksModal(message.succes);
+            form.reset();
+            statusMessage.remove();
+        }).catch(() => {
+            showThanksModal(message.failure);
         });
+
+        // request.addEventListener('load', () => {
+        //     if (request.status === 200) {
+        //         console.log(request.response);
+        //         showThanksModal(message.succes);
+        //         form.reset();
+        //         statusMessage.remove();
+        //     } else {
+        //         showThanksModal(message.failure);
+        //     }
+        // });
        });
    }
 
@@ -346,4 +355,24 @@ window.addEventListener('DOMContentLoaded', () => {
         closeModal();
     }, 40000);
    }
+
+
+   // -------------------------------------------------------------------------------------------------------------
+    /* Fetch API*/
+
+    /* API - application programming interface - программный интерфейс приложения, интерфейс прикладного программирования */
+    /* API набор данных и возможностей, которые предоставляют какое-то готовое решение */
+    /* DOM API  */
+    /* Google Maps API */
+    /* Fetch API позволяет общаться с сервером и построена на промисах */
+   /*  https://jsonplaceholder.typicode.com */
+    // fetch('https://jsonplaceholder.typicode.com/posts', {
+    //     method: "POST",
+    //     body: JSON.stringify({name: "Дмитрий"}),
+    //     headers: {
+    //         'Content-type': 'application/json'
+    //     }
+    // })
+    // .then(response => response.json())
+    // .then(json => console.log(json));
 });
