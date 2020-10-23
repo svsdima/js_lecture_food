@@ -9021,59 +9021,116 @@ window.addEventListener('DOMContentLoaded', () => {
         prev = document.querySelector('.offer__slider-prev'),
         next = document.querySelector('.offer__slider-next'),
         total = document.querySelector('#total'),
-        current = document.querySelector('#current');
+        current = document.querySelector('#current'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slidesField = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width;
   /* Индекс, который определяет текущее положение в слайдере */
 
   let slideIndex = 1;
-  /* Вызываем скрипт слайдера */
+  let offset = 0; // /* Вызываем скрипт слайдера */
+  // showSlides(slideIndex);
+  // if (slides.length < 10) {
+  //     total.textContent = `0${slides.length}`;
+  // } else {
+  //     total.textContent = slides.length;
+  // }
+  // /* Функция показа и скрытия слайда */
+  // function showSlides(n) {
+  //     /* Если ушли в последний слайд при нажатий направо перемещаемся в первый слайд */
+  //     if (n > slides.length) {
+  //         slideIndex = 1;
+  //     }
+  //     /* В первом слайде при нажатий налево перемещаемся в последний слайд */
+  //     if (n < 1) {
+  //         slideIndex = slides.length;
+  //     }
+  //     /* Скрываем все слайды */
+  //     slides.forEach(item => item.style.display = 'none');
+  //     /* Показываем слайд */
+  //     slides[slideIndex - 1].style.display = 'block';
+  //     if (slides.length < 10) {
+  //         current.textContent = `0${slideIndex}`;
+  //     } else {
+  //         current.textContent = slideIndex;
+  //     }
+  // }
+  // /* При переключении меняем индекс */
+  // function plusSlides(n) {
+  //     showSlides(slideIndex += n);
+  // }
+  // prev.addEventListener('click', () => {
+  //     plusSlides(-1);
+  // });
+  // next.addEventListener('click', () => {
+  //     plusSlides(1);
+  // });
+  // -------------------------------------------------------------------------------------------------------------
 
-  showSlides(slideIndex);
+  /* Создаём слайдер на сайте. вариант 2 (карусель) */
 
   if (slides.length < 10) {
     total.textContent = `0${slides.length}`;
+    current.textContent = `0${slideIndex}`;
   } else {
     total.textContent = slides.length;
+    current.textContent = slideIndex;
   }
-  /* Функция показа и скрытия слайда */
+  /* Создаём пространство, внутри которого будут расположены слайды */
 
 
-  function showSlides(n) {
-    /* Если ушли в последний слайд при нажатий направо перемещаемся в первый слайд */
-    if (n > slides.length) {
+  slidesField.style.width = 100 * slides.length + '%';
+  slidesField.style.display = 'flex';
+  slidesField.style.transition = '0.5s all';
+  slidesWrapper.style.overflow = 'hidden';
+  slides.forEach(slide => {
+    slide.style.width = width;
+  });
+  /* Передвигаем изображения */
+
+  next.addEventListener('click', () => {
+    if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+      // '500px'
+      offset = 0;
+    } else {
+      offset += +width.slice(0, width.length - 2);
+    }
+
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    if (slideIndex == slides.length) {
       slideIndex = 1;
+    } else {
+      slideIndex++;
     }
-    /* В первом слайде при нажатий налево перемещаемся в последний слайд */
-
-
-    if (n < 1) {
-      slideIndex = slides.length;
-    }
-    /* Скрываем все слайды */
-
-
-    slides.forEach(item => item.style.display = 'none');
-    /* Показываем слайд */
-
-    slides[slideIndex - 1].style.display = 'block';
 
     if (slides.length < 10) {
       current.textContent = `0${slideIndex}`;
     } else {
       current.textContent = slideIndex;
     }
-  }
-  /* При переключении меняем индекс */
-
-
-  function plusSlides(n) {
-    showSlides(slideIndex += n);
-  }
-
-  prev.addEventListener('click', () => {
-    plusSlides(-1);
   });
-  next.addEventListener('click', () => {
-    plusSlides(1);
+  prev.addEventListener('click', () => {
+    if (offset == 0) {
+      // '500px'
+      offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+    } else {
+      offset -= +width.slice(0, width.length - 2);
+    }
+
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    if (slideIndex == 1) {
+      slideIndex = slides.length;
+    } else {
+      slideIndex--;
+    }
+
+    if (slides.length < 10) {
+      current.textContent = `0${slideIndex}`;
+    } else {
+      current.textContent = slideIndex;
+    }
   });
 });
 
