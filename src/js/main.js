@@ -248,8 +248,11 @@ window.addEventListener('DOMContentLoaded', () => {
     //     });
     // });
 
-    getResource('http://localhost:3000/menu')
-       .then(data => createCard(data));
+    // getResource('http://localhost:3000/menu')
+    //    .then(data => createCard(data));
+
+    axios.get('http://localhost:3000/menu')
+    .then(data => createCard(data.data));
 
     function createCard(data) {
         data.forEach(({img, altimg, title, descr, price}) => {

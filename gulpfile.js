@@ -5,8 +5,11 @@ const autoprefixer = require("autoprefixer");
 const cleanCSS = require("gulp-clean-css");
 const postcss = require("gulp-postcss");
 const browsersync = require("browser-sync");
+const jsonServer = require("gulp-json-srv");
 
 const dist = "./dist";
+
+const server = jsonServer.create();
 
 gulp.task("copy-html", () => {
     return gulp.src("./src/index.html")
@@ -54,13 +57,20 @@ gulp.task("build-sass", () => {
 });
 
 gulp.task("copy-assets", () => {
+    gulp.src("./db.json") 
+        .pipe(gulp.dest(dist))
+        .pipe(server.pipe());
     gulp.src("./src/icons/**/*.*")
         .pipe(gulp.dest(dist + "/icons"));
-
     return gulp.src("./src/img/**/*.*")
                 .pipe(gulp.dest(dist + "/img"))
                 .pipe(browsersync.stream());
+    
+    
+    
 });
+
+
 
 gulp.task("watch", () => {
     browsersync.init({
@@ -74,6 +84,7 @@ gulp.task("watch", () => {
     gulp.watch("./src/img/**/*.*", gulp.parallel("copy-assets"));
     gulp.watch("./src/scss/**/*.scss", gulp.parallel("build-sass"));
     gulp.watch("./src/js/**/*.js", gulp.parallel("build-js"));
+    gulp.watch("./db.json", gulp.parallel("copy-assets"));
 });
 
 gulp.task("build", gulp.parallel("copy-html", "copy-assets", "build-sass", "build-js"));
@@ -85,6 +96,8 @@ gulp.task("prod", () => {
         .pipe(gulp.dest(dist + "/img"));
     gulp.src("./src/icons/**/*.*")
         .pipe(gulp.dest(dist + "/icons"));
+        gulp.src("./db.json")
+        .pipe(gulp.dest(dist));
 
     gulp.src("./src/js/main.js")
         .pipe(webpack({
@@ -119,5 +132,6 @@ gulp.task("prod", () => {
         .pipe(cleanCSS())
         .pipe(gulp.dest(dist + '/css'));
 });
+
 
 gulp.task("default", gulp.parallel("watch", "build"));

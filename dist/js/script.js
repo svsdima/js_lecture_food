@@ -350,9 +350,11 @@ window.addEventListener('DOMContentLoaded', () => {
   //         new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
   //     });
   // });
+  // getResource('http://localhost:3000/menu')
+  //    .then(data => createCard(data));
 
 
-  getResource('http://localhost:3000/menu').then(data => createCard(data));
+  axios.get('http://localhost:3000/menu').then(data => createCard(data.data));
 
   function createCard(data) {
     data.forEach(({
