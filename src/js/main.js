@@ -2,6 +2,8 @@
 
 'use strict';
 
+const { OutgoingMessage } = require("http");
+
 /* 1) Назначение глобального обработчика событий, который называется DOMContentLoaded */
 window.addEventListener('DOMContentLoaded', () => {
     /* Создаём табы в новом проекте */
@@ -399,4 +401,66 @@ window.addEventListener('DOMContentLoaded', () => {
 
    // -------------------------------------------------------------------------------------------------------------
     /* Получение данных с сервера. Async_Awayt (ES8)*/
+
+    // -------------------------------------------------------------------------------------------------------------
+    /* Что такое библиотеки. Библиотеки axios */
+
+
+    // -------------------------------------------------------------------------------------------------------------
+    /* Создаём слайдер на сайте. вариант 1 */
+
+    /* Получаем элементы страницы */
+    const slides = document.querySelectorAll('.offer__slide'),
+          prev = document.querySelector('.offer__slider-prev'),
+          next = document.querySelector('.offer__slider-next'),
+          total = document.querySelector('#total'),
+          current = document.querySelector('#current');
+    /* Индекс, который определяет текущее положение в слайдере */
+    let slideIndex = 1;
+
+    /* Вызываем скрипт слайдера */
+    showSlides(slideIndex);
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
+    /* Функция показа и скрытия слайда */
+    function showSlides(n) {
+        /* Если ушли в последний слайд при нажатий направо перемещаемся в первый слайд */
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+        /* В первом слайде при нажатий налево перемещаемся в последний слайд */
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        /* Скрываем все слайды */
+        slides.forEach(item => item.style.display = 'none');
+
+        /* Показываем слайд */
+        slides[slideIndex - 1].style.display = 'block';
+
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
+    /* При переключении меняем индекс */
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+    
+    prev.addEventListener('click', () => {
+        plusSlides(-1);
+    });
+
+    next.addEventListener('click', () => {
+        plusSlides(1);
+    });
 });
