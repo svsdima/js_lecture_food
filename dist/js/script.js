@@ -9086,7 +9086,10 @@ window.addEventListener('DOMContentLoaded', () => {
   slidesWrapper.style.overflow = 'hidden';
   slides.forEach(slide => {
     slide.style.width = width;
-  });
+  }); // function deleteNotDigits(src) {
+  //     return +str.replace(/\D/g, '');
+  // }
+
   /* Передвигаем изображения */
 
   next.addEventListener('click', () => {
@@ -9173,7 +9176,86 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
       current.textContent = slideIndex;
     }
+  } // -------------------------------------------------------------------------------------------------------------
+
+  /* Регулярные выражения */
+  // -------------------------------------------------------------------------------------------------------------
+
+  /* Создаём калькулятор на сайте, часть 1 */
+
+  /* Суточную норму каллорий считаем по ссылке https://fitseven.ru/zdorovie/metabolism/sutochnaya-norma-kaloriy */
+
+
+  const result = document.querySelector('.calculating__result span');
+  let sex = 'female',
+      height,
+      weight,
+      age,
+      ratio = 1.375;
+  /* Подсчёт результата */
+
+  function calcTotal() {
+    if (!sex || !height || !weight || !age || !ratio) {
+      result.textContent = 'Расчёт';
+      return;
+    }
+
+    if (sex === 'female') {
+      result.textContent = Math.round((447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio);
+    } else {
+      result.textContent = Math.round((88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio);
+    }
   }
+
+  calcTotal();
+  /* Собираем информацию */
+
+  function getStaticInformation(parentSelector, activeClass) {
+    const elements = document.querySelectorAll(`${parentSelector} div`);
+    elements.forEach(elem => {
+      elem.addEventListener('click', e => {
+        if (e.target.getAttribute('data-ratio')) {
+          ratio = +e.target.getAttribute('data-ratio');
+        } else {
+          sex = e.target.getAttribute('id');
+        }
+
+        elements.forEach(elem => {
+          elem.classList.remove(activeClass);
+        });
+        e.target.classList.add(activeClass);
+        calcTotal();
+      });
+    });
+  }
+
+  getStaticInformation('#gender', 'calculating__choose-item_active');
+  getStaticInformation('.calculating__choose_big', 'calculating__choose-item_active');
+
+  function getDinamicInformation(selector) {
+    const input = document.querySelector(selector);
+    input.addEventListener('input', () => {
+      switch (input.getAttribute('id')) {
+        case 'height':
+          height = +input.value;
+          break;
+
+        case 'weight':
+          weight = +input.value;
+          break;
+
+        case 'age':
+          age = +input.value;
+          break;
+      }
+
+      calcTotal();
+    });
+  }
+
+  getDinamicInformation('#height');
+  getDinamicInformation('#weight');
+  getDinamicInformation('#age');
 });
 
 /***/ }),
