@@ -1,4 +1,4 @@
-function tabs() {
+function tabs(tabsSelector, tabsContentSelector, tabsParentSelector, activeClass) {
    /* Создаём табы в новом проекте */
 
     /* Внутри него будут все остальные скрипты, которые будут созданы в этом проекте */
@@ -9,11 +9,11 @@ function tabs() {
     - Назначить обработчик событий на меню, которая будет манипулировать вышеперечисленными функциями  */
 
     /* Табы на которые мы будем кликать */
-    const tabs = document.querySelectorAll('.tabheader__item'),
+    const tabs = document.querySelectorAll(tabsSelector),
         /* Весь контент, который будет находится в нашей вёрстке */
-          tabsContent = document.querySelectorAll('.tabcontent'),
+          tabsContent = document.querySelectorAll(tabsContentSelector),
           /* Родитель, который будет содержать все эти табы */
-          tabsParent = document.querySelector('.tabheader__items');
+          tabsParent = document.querySelector(tabsParentSelector);
 
     /* Скрываем все ненужные нам табы */
     function hideTabContent() {
@@ -24,7 +24,7 @@ function tabs() {
         });
         /* У каждого из элементов табов удаляем класс активности */
         tabs.forEach(item => {
-            item.classList.remove('tabheader__item_active');
+            item.classList.remove(activeClass);
         });
     }
 
@@ -32,7 +32,7 @@ function tabs() {
     function showTabContent(i = 0) {
         tabsContent[i].classList.add('show', 'fade');
         tabsContent[i].classList.remove('hide');
-        tabs[i].classList.add('tabheader__item_active');
+        tabs[i].classList.add(activeClass);
     }
 
     hideTabContent();
@@ -42,7 +42,7 @@ function tabs() {
     tabsParent.addEventListener('click', (event) => {
         const target = event.target;
 
-        if (target && target.classList.contains('tabheader__item')) {
+        if (target && target.classList.contains(tabsSelector.slice(1))) {
             tabs.forEach((item, i) => {
                 if (target == item) {
                     hideTabContent();
@@ -53,4 +53,4 @@ function tabs() {
     });
 }
 
-module.exports = tabs;
+export default tabs;
